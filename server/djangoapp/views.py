@@ -1,6 +1,6 @@
 # Uncomment the required imports before adding the code
 
-# from django.shortcuts import render
+from django.shortcuts import render
 # from django.http import HttpResponseRedirect, HttpResponse
 # from django.contrib.auth.models import User
 # from django.shortcuts import get_object_or_404, render, redirect
@@ -13,6 +13,7 @@ from django.contrib.auth import login, authenticate
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
+#from django.views.generic.base import TemplateView
 # from .populate import initiate
 
 
@@ -21,6 +22,9 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
+
+def aboutus(request):
+    return render(request,"About.html")
 
 # Create a `login_request` view to handle sign in request
 @csrf_exempt
