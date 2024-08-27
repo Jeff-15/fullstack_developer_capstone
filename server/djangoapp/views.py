@@ -2,14 +2,14 @@
 
 from django.shortcuts import render
 # from django.http import HttpResponseRedirect, HttpResponse
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 # from django.shortcuts import get_object_or_404, render, redirect
 # from django.contrib.auth import logout
 # from django.contrib import messages
 # from datetime import datetime
 
 from django.http import JsonResponse
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -43,13 +43,36 @@ def login_user(request):
     return JsonResponse(data)
 
 # Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
+def logout_request(request):
+    logout(request)
+    data={"userName":""}
+    return JsonResponse(data)
 
 # Create a `registration` view to handle sign up request
 # @csrf_exempt
-# def registration(request):
-# ...
+def registration(request):
+    data = json.loads(request.body)
+    username = data['userName']
+    if(username == ""):
+        data = {"username":username, "status": 1,"message": "failed: username cannot be empty"}
+        return JsonResponse(data)
+    password = data['password']
+    if(len(password)<5):
+        data = {"username":username, "status": 1,"message": "failed: Password too short! At least 5 characters"}
+        return JsonResponse(data)
+    firstname = data['firstName']
+    lastname = data['lastName']
+    email=data['email']
+    try:
+        User.objects.get(username=username)
+        data = {"username":username, "status": 1,"message": "failed: username exists"}
+        return JsonResponse(data)
+    except:
+        logger.debug("%s is registered", username)
+        user = User.objects.create_user(username,email,password,first_name=firstname,last_name=lastname)
+        login(request,user)
+        data = {"username":username, "status":0}
+        return JsonResponse(data)
 
 # # Update the `get_dealerships` view to render the index page with
 # a list of dealerships
