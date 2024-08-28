@@ -17,9 +17,9 @@ const PostReview = () => {
   let root_url = curr_url.substring(0,curr_url.indexOf("postreview"));
   let params = useParams();
   let id =params.id;
-  let dealer_url = root_url+`djangoapp/dealer/${id}`;
-  let review_url = root_url+`djangoapp/add_review`;
-  let carmodels_url = root_url+`djangoapp/get_cars`;
+  let dealer_url = root_url+`djangoapp/getdealer/${id}`;
+  let review_url = root_url+`djangoapp/postreview`;
+  let carmodels_url = root_url+`djangoapp/getcars`;
 
   const postreview = async ()=>{
     let name = sessionStorage.getItem("firstname")+" "+sessionStorage.getItem("lastname");
@@ -83,6 +83,7 @@ const PostReview = () => {
     
     let carmodelsarr = Array.from(retobj.CarModels)
     setCarmodels(carmodelsarr)
+    
   }
   useEffect(() => {
     get_dealer();
@@ -104,7 +105,7 @@ const PostReview = () => {
       <select name="cars" id="cars" onChange={(e) => setModel(e.target.value)}>
       <option value="" selected disabled hidden>Choose Car Make and Model</option>
       {carmodels.map(carmodel => (
-          <option value={carmodel.CarMake+" "+carmodel.CarModel}>{carmodel.CarMake} {carmodel.CarModel}</option>
+          <option value={carmodel.Make+" "+carmodel.Model}>{carmodel.Make} {carmodel.Model}</option>
       ))}
       </select>        
       </div >

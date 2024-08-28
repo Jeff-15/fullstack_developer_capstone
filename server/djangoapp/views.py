@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 
 from .models import CarMake, CarModel
 
+from .restapis import get_request, analyze_review_sentiments, post_review
+
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 import logging
@@ -90,17 +92,40 @@ def get_cars(request):
 
 # # Update the `get_dealerships` view to render the index page with
 # a list of dealerships
-# def get_dealerships(request):
-# ...
+def get_dealerships(request, state='All'):
+    endpoint = ""
+    if(state == "All"):
+        endpoint = "/fetchDealers"
+    else:
+        endpoint = "/fetchDealers/" + state
+    dealerships = get_request(endpoint)
+    return JsonResponse({"status": 200, "dealers": dealerships})
 
 # Create a `get_dealer_reviews` view to render the reviews of a dealer
-# def get_dealer_reviews(request,dealer_id):
-# ...
+def get_dealer_reviews(request,dealer_id):
+    endpoint = "/fetchReviews/dealer/"+str(dealer_id)
+    reviews = get_request(endpoint)
+    for review in reviews:
+        data = review["review"]
+        sentiment = analyze_review_sentiments(data)
+        review["sentiment"] = sentiment['sentiment']
+    return JsonResponse({"status":200, "review_details":reviews})
 
 # Create a `get_dealer_details` view to render the dealer details
-# def get_dealer_details(request, dealer_id):
-# ...
-
+def get_dealer_details(request, dealer_id):
+    if(dealer_id):
+        endpoint = "/fetchDealer/"+str(dealer_id)
+        dealership = get_request(endpoint)
+        print()
+        return JsonResponse({"status": 200, "dealer": dealership})
+    return JsonResponse({"status":400, "message":"badrequest"})
 # Create a `add_review` view to submit a review
-# def add_review(request):
-# ...
+def add_review(request):
+    if(request.user.is_authenticated):
+        data = json.loads(request.body)
+        try:
+            response = post_review(data)
+            return JsonResponse({"status":200})
+        except:
+            return JsonResponse({"status":401, "message":"Failed to post reviews"})
+    return JsonResponse({"status":403,"message":"Log in before you comment!"})

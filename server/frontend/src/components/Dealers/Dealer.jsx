@@ -20,8 +20,8 @@ const Dealer = () => {
   let root_url = curr_url.substring(0,curr_url.indexOf("dealer"));
   let params = useParams();
   let id =params.id;
-  let dealer_url = root_url+`djangoapp/dealer/${id}`;
-  let reviews_url = root_url+`djangoapp/reviews/dealer/${id}`;
+  let dealer_url = root_url+`djangoapp/getdealer/${id}`;
+  let reviews_url = root_url+`djangoapp/getreview/dealer/${id}`;
   let post_review = root_url+`postreview/${id}`;
   
   const get_dealer = async ()=>{
@@ -31,7 +31,7 @@ const Dealer = () => {
     const retobj = await res.json();
     
     if(retobj.status === 200) {
-      let dealerobjs = Array.from(retobj.dealer)
+      let dealerobjs = Array.from(retobj.dealer);
       setDealer(dealerobjs[0])
     }
   }
@@ -43,8 +43,9 @@ const Dealer = () => {
     const retobj = await res.json();
     
     if(retobj.status === 200) {
-      if(retobj.reviews.length > 0){
-        setReviews(retobj.reviews)
+      if(retobj.review_details.length > 0){
+        alert("The reviews are recieved");
+        setReviews(retobj.review_details);
       } else {
         setUnreviewed(true);
       }
@@ -64,7 +65,7 @@ const Dealer = () => {
 
       
     }
-  },[]);  
+  },[]);
 
 
 return(
