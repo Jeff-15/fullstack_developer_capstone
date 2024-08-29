@@ -5,6 +5,8 @@
 
     ENV APP=/app 
 
+    WORKDIR ${APP}
+
     COPY requirements.txt ${APP}
 
     RUN pip3 install -r requirements.txt

@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-backend_url = os.getenv('backend_url', default="https://jefferyxu200-3030.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai")
-#backend_url = os.getenv('backend_url', default="http://localhost:3030")
+backend_url = os.getenv('backend_url', default="https://localhost:3030")
+#backend_url = "http://localhost:3030/"
 sentiment_analyzer_url = os.getenv('sentiment_analyzer_url', default="https://sentianalyzer.1l67mjw23e6y.us-south.codeengine.appdomain.cloud/")
 
 def get_request(endpoint, **kwargs):
